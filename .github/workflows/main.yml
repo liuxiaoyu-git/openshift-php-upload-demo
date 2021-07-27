@@ -31,3 +31,15 @@ jobs:
           echo "${{ secrets.QUAY_PASSWORD }}" | docker login -u "${{ secrets.QUAY_USERNAME }}" --password-stdin quay.io
           docker tag uploader:${{ github.sha }} quay.io/${{ secrets.QUAY_USERNAME }}/uploader:${{ github.sha }}
           docker push quay.io/${{ secrets.QUAY_USERNAME }}/uploader:${{ github.sha }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to OpenShift
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ secrets.OPENSHIFT_NAMESPACE }}
