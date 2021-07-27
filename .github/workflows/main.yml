@@ -1,0 +1,27 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Image Build
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      - name: Build Image
+        id: build_image
+        uses: redhat-actions/s2i-build@v2
+        with:
+          path_context: '.'
+          builder_image: 'centos/php-72-centos7'
+          tags: ${{ github.sha }}
+          image: uploader
+
