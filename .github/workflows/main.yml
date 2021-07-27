@@ -25,3 +25,9 @@ jobs:
           tags: ${{ github.sha }}
           image: uploader
 
+      - name: Push To quay
+        run: |
+          echo "Attempting docker login to: quay.io"
+          echo "${{ secrets.QUAY_PASSWORD }}" | docker login -u "${{ secrets.QUAY_USERNAME }}" --password-stdin quay.io
+          docker tag uploader:${{ github.sha }} quay.io/${{ secrets.QUAY_USERNAME }}/uploader:${{ github.sha }}
+          docker push quay.io/${{ secrets.QUAY_USERNAME }}/uploader:${{ github.sha }}
