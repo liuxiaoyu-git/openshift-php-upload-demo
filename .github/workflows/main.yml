@@ -34,6 +34,7 @@ jobs:
 
   deploy:
     needs: build
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: Log in to OpenShift
@@ -43,3 +44,11 @@ jobs:
           openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
           insecure_skip_tls_verify: true
           namespace: ${{ secrets.OPENSHIFT_NAMESPACE }}
+
+      - name: Delete and deploy
+        run: |
+          oc delete deployment --all
+          oc delete routes --all
+          oc delete services --all
+          oc new-app --name uploader --docker-image=quay.io/${{ secrets.QUAY_USERNAME }}/uploader:${{ github.sha }}
+          oc expose svc/uploader
