@@ -1,7 +1,7 @@
 <?php require_once("includes/header.php") ?>
 <section class='container'>
           <hgroup>
-            	<h1>OpenShift File Upload Demonstration 2</h1>
+            	<h1>OpenShift File Upload Demonstration 3</h1>
           </hgroup>
 
 		<form action="upload.php" method="post" enctype="multipart/form-data">
